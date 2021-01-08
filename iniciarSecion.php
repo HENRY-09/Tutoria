@@ -13,7 +13,7 @@
             }
             else{
             $res["nombre"]=null;
-            echo json_encode("$res");
+            echo json_encode($res);
             }
             
         }

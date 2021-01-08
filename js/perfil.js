@@ -1,12 +1,12 @@
 let pagina= location.pathname.split("/");
 pagina=pagina[pagina.length-1];
-
 if(pagina=="perfilProfesor" || pagina=="perfilEstudiante" ){
 const Data= new FormData();
 const foto= document.getElementById("foto");
 const nombre= document.getElementById("nombre");
 const foto2= document.getElementById("foto2");
 const nombre2= document.getElementById("nombre2");
+
 Data.append("tipo","pedirDatos");
 fetch("iniciarSecion",{
     method: "POST",
@@ -30,11 +30,15 @@ fetch("iniciarSecion",{
     
 })
 
+
+
 const menu= document.getElementById("icon-menu");
+let cont=0;
 menu.addEventListener("click",()=>{
     const contenedor= document.querySelector(".contenedor-perfil");
     const baner= document.querySelector(".baner");
     const dinamico= document.getElementById("contenedor-dinamico");
+    
     if(contenedor.classList.contains("menu-invisible")==true){
         contenedor.classList.remove("menu-invisible");
         contenedor.classList.add("menu-visible");
@@ -42,6 +46,9 @@ menu.addEventListener("click",()=>{
         dinamico.classList.add("disminuir");
         */
         baner.classList.add("baner-disminuir");
+        if(cont==1){
+            baner.classList.add("baner-disminuir2");
+        }
         
         document.querySelector(".inicio").classList.add("div-disminuir");
         document.querySelector(".tutor").classList.add("div-disminuir");
@@ -56,6 +63,13 @@ menu.addEventListener("click",()=>{
         dinamico.classList.add("aumentar");
         */
         baner.classList.remove("baner-disminuir");
+        if(baner.classList.contains("baner-disminuir2")){
+            cont=1;
+            baner.classList.remove("baner-disminuir2");
+        }else{
+            cont=0;
+        }
+        
         
         document.querySelector(".inicio").classList.remove("div-disminuir");
         document.querySelector(".tutor").classList.remove("div-disminuir");
@@ -316,21 +330,7 @@ if(pagina=="perfilEstudiante"){
     });
     /*Mis tutorias2 el que esta debajo de Cerrar sesion */
     misTutorias2.addEventListener("click",()=>{
-        const activos= Array.from(document.querySelectorAll(".activo"));
-        for (const elemento of activos) {
-            elemento.classList.remove("activo");
-            elemento.classList.add("inactivo");
-        }
-        misTutorias.classList.remove("inactivo");
-        misTutorias.classList.add("activo");
-        //Eliminar contenido y volverlo a crear.
-        contenido.remove();
-        contenido= document.createElement("div");
-        contenido.setAttribute("id","contenido");
-        contenido.setAttribute("class","contenido");
-        contenedordinamico.append(contenido);
-        MisTutorias("Estudiante");
-    
+        window.location.reload();
     });
     /*MIS CONFIGURACIONES ESTUDIANTES*/
     configuraciones.addEventListener("click",()=>{
@@ -347,7 +347,7 @@ if(pagina=="perfilEstudiante"){
         contenido.setAttribute("id","contenido");
         contenido.setAttribute("class","contenido");
         contenedordinamico.append(contenido);
-
+        Configuraciones("Estudiante");
     });
     
 }
@@ -396,23 +396,9 @@ if(pagina=="perfilProfesor"){
         //FIN DE MIS TUTORIAS PROFESOR
     });
     misTutorias2.addEventListener("click",()=>{
-        const activos= Array.from(document.querySelectorAll(".activo"));
-        for (const elemento of activos) {
-            elemento.classList.remove("activo");
-            elemento.classList.add("inactivo");
-        }
-        misTutorias.classList.remove("inactivo");
-        misTutorias.classList.add("activo");
-        //Eliminar contenido y volverlo a crear.
-        contenido.remove();
-        contenido= document.createElement("div");
-        contenido.setAttribute("id","contenido");
-        contenido.setAttribute("class","contenido");
-        contenedordinamico.append(contenido);
-        MisTutorias("Profesor");
-        
-        //FIN DE MIS TUTORIAS PROFESOR
+        window.location.reload();
     });
+        //MIS CONFIGURACIONES PROFESOR
     configuraciones.addEventListener("click",()=>{
         const activos= Array.from(document.querySelectorAll(".activo"));
         for (const elemento of activos) {
@@ -427,12 +413,13 @@ if(pagina=="perfilProfesor"){
         contenido.setAttribute("id","contenido");
         contenido.setAttribute("class","contenido");
         contenedordinamico.append(contenido);
-
+        Configuraciones("Profesor");
     });
 }
 
 
 const MisTutorias= (user)=>{
+    
     const contenido= document.getElementById("contenido");
     const div= document.createElement("div");
     const h2= document.createElement("h2");
@@ -457,7 +444,7 @@ const MisTutorias= (user)=>{
     .then(res=>res.json())
     .then(res=>{
         
-        if(res==null) alert("Error en la base de datos");
+        //if(res==null) alert("Error en la base de datos");
         
         if(res.nombre===null){
             alert("Lo sentimos Debe iniciar sesion");
@@ -637,4 +624,365 @@ const MisTutorias= (user)=>{
         div.append(h3);
         contenido.append(div);
     })
+}
+
+
+const Configuraciones= (user)=>{
+    const body=document.getElementsByTagName('body')[0];
+    let contenedor_perfil= document.querySelector(".contenedor-perfil");
+    contenedor_perfil.remove();
+    contenedor_perfil= document.createElement("div");
+    contenedor_perfil.classList.add("contenedor-perfil");
+    contenedor_perfil.classList.add("contenedor-perfil2");
+    contenedor_perfil.classList.add("menu-visible");
+    const contenido= document.getElementById("contenido");
+    const baner= document.querySelector(".baner");
+    baner.classList.add("baner-disminuir2");
+    contenido.classList.add("white");
+    body.append(contenedor_perfil);
+
+    const div1= document.createElement("div");
+    div1.textContent="Configuraciones";
+    const div2= document.createElement("div");
+    div2.classList.add("opciones2");
+    const span1= document.createElement("span");
+    span1.classList.add("icon-pencil");
+    div2.textContent="Información personal";
+
+    const div3= document.createElement("div");
+    div3.classList.add("opciones2");
+    const span2= document.createElement("span");
+    span2.classList.add("icon-camera");
+    div3.textContent="Actualizar foto de perfil";
+
+    const div4= document.createElement("div");
+    div4.classList.add("opciones2");
+    const span3= document.createElement("span");
+    span3.classList.add("icon-lock");
+    div4.textContent="Cambiar contraseña";
+    const contenedor_opciones= document.createElement("div");
+    div2.append(span1);
+    div3.append(span2);
+    div4.append(span3);
+    contenedor_perfil.append(contenedor_opciones);
+    contenedor_opciones.append(div1);
+    contenedor_opciones.append(div2);
+    contenedor_opciones.append(div3);
+    contenedor_opciones.append(div4);
+    //ACTUALIZAR INFORMACION PERSONAL
+    div2.addEventListener("click",()=>{
+        let conten= document.getElementById("contenido");
+        const contenedor_dinamico= document.getElementById("contenedor-dinamico");
+        conten.remove();
+        conten= document.createElement("div");
+        conten.setAttribute("id","contenido");
+        conten.classList.add("contenido");
+        conten.classList.add("white");
+        contenedor_dinamico.append(conten);
+
+        div2.classList.add("inactivo");
+        div3.classList.remove("inactivo");
+        div4.classList.remove("inactivo");
+
+        const contenedor=document.createElement("div");
+        contenedor.classList.add("contenedor-informacion");
+        const h1=document.createElement("h1");
+        h1.textContent="Informacion personal";
+        const p=document.createElement("p");
+        p.textContent="Ver y editar tu informacion personal";
+        const form=document.createElement("form");
+
+        let div=document.createElement("div");
+        let label=document.createElement("label");
+        let input=document.createElement("input");
+        label.setAttribute("for","nombre");
+        label.textContent="Nombre";
+        input.setAttribute("id","nombre");
+        input.setAttribute("type","text");
+        div.append(label);
+        div.append(input);
+        form.append(div);
+
+        div=document.createElement("div");
+        label=document.createElement("label");
+        input=document.createElement("input");
+        label.setAttribute("for","apellido");
+        label.textContent="Apellido";
+        input.setAttribute("id","apellido");
+        input.setAttribute("type","text");
+        div.append(label);
+        div.append(input);
+        form.append(div);
+
+        div=document.createElement("div");
+        label=document.createElement("label");
+        input=document.createElement("input");
+        label.setAttribute("for","cedula");
+        label.textContent="N. de cedula";
+        input.setAttribute("id","cedula");
+        input.setAttribute("type","number");
+        input.setAttribute("min","1");
+        div.append(label);
+        div.append(input);
+        form.append(div);
+
+        div=document.createElement("div");
+        label=document.createElement("label");
+        input=document.createElement("input");
+        label.setAttribute("for","celular");
+        label.textContent="N. de celular";
+        input.setAttribute("id","celular");
+        input.setAttribute("type","number");
+        input.setAttribute("min","1");
+        div.append(label);
+        div.append(input);
+        form.append(div);
+
+        const button=document.createElement("button");
+        button.classList.add("boton-informacion");
+        button.textContent="Actualizar informacion";
+        button.setAttribute("type","submit");
+        form.append(button);
+
+        contenedor.append(h1);
+        contenedor.append(p);
+        contenedor.append(form);
+        conten.append(contenedor);
+
+        form.addEventListener("submit",(e)=>{
+            e.preventDefault();
+            const nombre= document.getElementById("nombre").value;
+            const apellido= document.getElementById("apellido").value;
+            const cedula= document.getElementById("cedula").value;
+            const celular= document.getElementById("celular").value;
+            const Data = new FormData();
+            Data.append("tipo",user);
+            Data.append("tipo1","Informacion-personal");
+            Data.append("nombre",nombre);
+            Data.append("apellido",apellido);
+            Data.append("cedula",cedula);
+            Data.append("celular",celular);
+            if(nombre!="" && apellido!="" && cedula!="" && celular!=""){
+                fetch("configuraciones",{
+                    method:"POST",
+                    body: Data
+                })
+                .then(res=>{
+                    
+                    alert("La informacion personal fue actualizada Exitosamente");
+                    document.getElementById("nombre2").textContent=nombre;
+                    
+                })
+            }
+            else if(nombre==""){
+                alert("El nombre es requerido para actualizar la informacion personal");
+            }
+            else if(apellido==""){
+                alert("El apellido es requerido para actualizar la informacion personal");
+            }
+            else if(cedula==""){
+                alert("La cedula es requerido para actualizar la informacion personal");
+            }
+            else if(celular==""){
+                alert("El celular es requerido para actualizar la informacion personal");
+            }
+
+        })
+
+    })
+    //ACTUALIZAR FOTO DE PERFIL
+    div3.addEventListener("click",()=>{
+        let conten= document.getElementById("contenido");
+        const contenedor_dinamico= document.getElementById("contenedor-dinamico");
+        conten.remove();
+        conten= document.createElement("div");
+        conten.setAttribute("id","contenido");
+        conten.classList.add("contenido");
+        conten.classList.add("white");
+        contenedor_dinamico.append(conten);
+
+        div3.classList.add("inactivo");
+        div2.classList.remove("inactivo");
+        div4.classList.remove("inactivo");
+        const contenedor=document.createElement("div");
+        const h1=document.createElement("h1");
+        h1.textContent="Actualizar foto de perfil";
+        const p=document.createElement("p");
+        p.textContent="Ver y actualizar tu foto de perfil";
+        const contenedor_foto= document.createElement("div");
+        contenedor_foto.classList.add("contenedor-actualizar-foto");
+        const img= document.createElement("img");
+        img.setAttribute("id","foto3");
+        const foto_Perfil=`${document.getElementById("foto2").getAttribute("src")}`;
+        img.setAttribute("src",foto_Perfil);
+        const button= document.createElement("div");
+        const label= document.createElement("label");
+        label.setAttribute("for","foto");
+        label.textContent="Cambiar foto de perfil";
+        const input= document.createElement("input");
+        input.setAttribute("id","foto");
+        input.setAttribute("type","file");
+        button.append(label);
+        button.append(input);
+        contenedor_foto.append(img);
+        contenedor_foto.append(button);
+        contenedor.append(h1);
+        contenedor.append(p);
+        contenedor.append(contenedor_foto);
+        conten.append(contenedor);
+        
+        input.addEventListener("change",()=>{
+            const Data = new FormData();
+            Data.append("tipo",user);
+            Data.append("tipo1",user);
+            Data.append("foto",input.files[0]);
+            fetch("configuraciones",{
+                method:"POST",
+                body: Data
+            })
+            .then(res=>res.json())
+            .then(res=>{
+                const foto1= document.getElementById("foto2");
+                const foto2= document.getElementById("foto3");
+                //Tomar el src que se va mostrar en las dos imagenes de perfil
+                foto1.setAttribute("src",`data:image/jpg;base64,${res.foto}`);
+                foto2.setAttribute("src",`data:image/jpg;base64,${res.foto}`);
+            })
+        })
+
+    })
+    //ACTUALIZAR CONTRASEÑA
+    div4.addEventListener("click",()=>{
+        let conten= document.getElementById("contenido");
+        const contenedor_dinamico= document.getElementById("contenedor-dinamico");
+        conten.remove();
+        conten= document.createElement("div");
+        conten.setAttribute("id","contenido");
+        conten.classList.add("contenido");
+        conten.classList.add("white");
+        contenedor_dinamico.append(conten);
+
+        div4.classList.add("inactivo");
+        div3.classList.remove("inactivo");
+        div2.classList.remove("inactivo");
+
+        const contenedor=document.createElement("div");
+        contenedor.classList.add("contenedor-contraseña");
+        const h1=document.createElement("h1");
+        h1.textContent="Cambiar contraseña";
+        const p=document.createElement("p");
+        p.textContent="Actualiza tu contraseña";
+        const form=document.createElement("form");
+        
+        let div=document.createElement("div");
+        let label=document.createElement("label");
+        let input=document.createElement("input");
+        label.setAttribute("for","actual-contraseña");
+        label.textContent="Actual contraseña";
+        let par=document.createElement("p");
+        par.textContent="Introduzca su contraseña actual";
+        input.setAttribute("id","actual-contraseña");
+        input.setAttribute("type","password");
+        div.append(label);
+        div.append(par);
+        div.append(input);
+        form.append(div);
+
+        div=document.createElement("div");
+        label=document.createElement("label");
+        input=document.createElement("input");
+        label.setAttribute("for","nueva-contraseña");
+        label.textContent="Nueva contraseña";
+        par=document.createElement("p");
+        par.textContent="Minimo 5 caracteres";
+        input.setAttribute("id","nueva-contraseña");
+        input.setAttribute("type","password");
+        div.append(label);
+        div.append(par);
+        div.append(input);
+        form.append(div);
+
+        div=document.createElement("div");
+        label=document.createElement("label");
+        input=document.createElement("input");
+        label.setAttribute("for","repetir-contraseña");
+        label.textContent="Repetir contraseña";
+        par=document.createElement("p");
+        par.textContent="Asegurese de que las contraseñas coincidan";
+        input.setAttribute("id","repetir-contraseña");
+        input.setAttribute("type","password");
+        div.append(label);
+        div.append(par);
+        div.append(input);
+        form.append(div);
+        
+        const button=document.createElement("button");
+        button.classList.add("cambiar-contraseña");
+        button.textContent="Cambiar contraseña";
+        button.setAttribute("type","submit");
+        form.append(button);
+
+
+        contenedor.append(h1);
+        contenedor.append(p);
+        contenedor.append(form);
+        conten.append(contenedor);
+
+        form.addEventListener("submit",(e)=>{
+            e.preventDefault();
+            const pass_actual=document.getElementById("actual-contraseña").value;
+            let Data = new FormData();
+            //Pedir contraseña
+            Data.append("tipo",user);
+            Data.append("tipo1","Pedir-contrasena");
+            Data.append("pass",pass_actual);
+            fetch("configuraciones",{
+                method:"POST",
+                body: Data
+            })
+            .then(res=>res.json())
+            .then(res=>{
+                
+                let pass_nueva=document.getElementById("nueva-contraseña").value;
+                let pass_repetir=document.getElementById("repetir-contraseña").value;
+                if(res.res=="valida"){
+                    if(pass_nueva.trim()!="" && pass_repetir.trim()!="" && pass_nueva.trim().length>=5){
+                        pass_nueva= pass_nueva.trim();
+                        pass_repetir= pass_repetir.trim();
+                        if(pass_nueva==pass_repetir){
+                            Data.append("tipo1","Cambiar-contrasena");
+                            Data.append("pass",pass_nueva);
+                            fetch("configuraciones",{
+                                method:"POST",
+                                body: Data
+                            })
+                            .then(res=>{
+                                alert("La contraseña a sido cambiada Exitosamente. Por favor vuelva iniciar sesion");
+                                window.location.href="destruirSecion";
+                            })
+                        }
+                        else{
+                            alert("Las contraseñas no coinciden.");
+                        }
+                        
+                    }
+                    else if(pass_nueva.trim().length<5){
+                        alert("La contraseña nueva debe tener minimo 5 caracteres y no puede estar vacia.");
+                    }
+                    else{
+                        alert("Debe repetir la contraseña nueva");
+                    }
+                    
+                }
+                else{
+                    alert("La contraseña actual introducida no es correcta.");
+                }
+                
+            })
+            //Cambiar contraseña
+            
+        })
+
+    })
+
 }
