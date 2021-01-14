@@ -1044,6 +1044,10 @@ const Configuraciones= (user)=>{
         div5.append(span4);
         contenedor_opciones.append(div5);
         div5.addEventListener("click",()=>{
+            arreglo=[];
+            arregloE=[];
+            cont1=0;
+            contE=0;
             let conten= document.getElementById("contenido");
             const contenedor_dinamico= document.getElementById("contenedor-dinamico");
             conten.remove();
