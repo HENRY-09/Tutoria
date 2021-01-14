@@ -272,7 +272,7 @@ if(pagina=="perfilEstudiante"){
 
     
     var calendarEl = document.getElementById('calendar');
-
+    let color;
     
     /*var hola = new Date();
 
@@ -448,52 +448,19 @@ if(pagina=="perfilEstudiante"){
       },
 
       eventMouseEnter:function(mouseEnterInfo) { 
-
-        //mouseEnterInfo.el.style.backgroundColor = '#299AD1';
-
-        
-
-      },
-
-     
-
-
-     
-
-      eventMouseLeave:function(mouseLeaveInfo) { 
-
-        //mouseLeaveInfo.el.style.backgroundColor = '#19CD0D';
-
-      },
-
-      
-     
-
-
-      eventClick:function(calEvent,jsEvent,view){
-        //Elimina el evento luego de que ya esta creado y ademas hay que eliminar del arreglo tambien la fecha borrada.
-        
-        var fecha = new Date(calEvent.event.start);
-        let color= calEvent.event.backgroundColor;
-
+    
+        var fecha = new Date(mouseEnterInfo.event.start);
+         color= mouseEnterInfo.event.backgroundColor;
+        mouseEnterInfo.el.style.backgroundColor = '#299AD1';
         const fechaFinal = ""+fecha.getFullYear()+"-"+(fecha.getMonth()+1)+"-"+fecha.getDate()+" "+fecha.getHours()+":00:00";
  
         const fechaFinal2 = ""+fecha.getFullYear()+"-"+(fecha.getMonth()+1)+"-"+fecha.getDate()+" "+(fecha.getHours()+1)+":00:00";
  
         //alert(fechaFinal);
         const fechaE=fechaFinal+"/"+fechaFinal2; 
-        if(pagina=="perfilProfesor"){
-            let pos = arreglo.indexOf(fechaE);
-            
-            if(pos!= -1){
-                arreglo.splice(pos,1);
-                longitud=arreglo.length;
-                cont1--;
-            }
-            calEvent.event.remove(); 
-        }
-        else if(pagina=="perfilEstudiante"){
-            calendarEl.addEventListener("click",(e)=>{
+        if(pagina=="perfilEstudiante"){
+            mouseEnterInfo.el.addEventListener("mouseenter",(e)=>{
+                console.log(e.target);
                 const elemento= document.querySelector(".contenedor-reservar");
                 const elemento1= document.querySelector(".triangulo");
                 if(elemento != null){
@@ -504,6 +471,17 @@ if(pagina=="perfilEstudiante"){
                  div.classList.add("contenedor-reservar");
                  const div1= document.createElement("div");
                  div1.classList.add("triangulo");
+                
+                 const conten_foto= document.createElement("div");
+                 conten_foto.classList.add("conten-foto");
+                 const fot= document.createElement("img");
+                 for (const tutor of res) {
+                    if(tutor.cedula== cedulaprofesor){
+                        fot.setAttribute("src",`data:image/jpg;base64,${tutor.foto}`);
+                        conten_foto.append(fot);
+                    }
+                    
+                 }
                  let arr= fechaFinal.split(" ");
                  let arr1= fechaFinal2.split(" ");
  
@@ -532,6 +510,7 @@ if(pagina=="perfilEstudiante"){
                 div3.append(span2);
                 div2.append(p1);
                 div3.append(p2);
+                div.append(conten_foto);
                 div.append(div2);
                 div.append(div3);
                 div.append(button);
@@ -557,6 +536,7 @@ if(pagina=="perfilEstudiante"){
                                      //if(res==null) alert("Error en la base de datos");
  
                                      if(res=="RESERVADA"){
+
                                          alert(`LA TUTORIA FUE: ${res}.`);
                                           window.location.href="perfilEstudiante";
                                      }
@@ -566,7 +546,7 @@ if(pagina=="perfilEstudiante"){
                                  })
                              })
                  ///////////////
-                 if(calEvent.event.backgroundColor=="red"){
+                 if(mouseEnterInfo.event.backgroundColor=="red"){
                     
                     button.remove();
                     const button2= document.createElement("button");
@@ -574,7 +554,7 @@ if(pagina=="perfilEstudiante"){
                     button2.style.backgroundColor = 'red';
                     div.append(button2);
                 }
-                if(calEvent.event.backgroundColor!="#19CD0D" && calEvent.event.backgroundColor!="red"){
+                if(mouseEnterInfo.event.backgroundColor!="#19CD0D" && mouseEnterInfo.event.backgroundColor!="red"){
                     div.remove();
                     div1.remove(); 
                 }
@@ -588,13 +568,65 @@ if(pagina=="perfilEstudiante"){
                 var diferencia = 24-fecha3.getHours();
                 var auxiliar = new Date(fecha3.getFullYear(),fecha3.getMonth(),fecha3.getDate(),fecha3.getHours()+diferencia,0,0);
 
-                if(Date.parse(auxiliar)>=Date.parse(calEvent.event.start)){
+                if(Date.parse(auxiliar)>=Date.parse(mouseEnterInfo.event.start)){
                     div.remove();
                     div1.remove(); 
                 }
                 ////////
              })
             
+        }
+        
+
+      },
+
+     
+
+
+     
+
+      eventMouseLeave:function(mouseLeaveInfo) { 
+        if(color=="red"){
+            mouseLeaveInfo.el.style.backgroundColor = "red";
+        }
+        else{
+            mouseLeaveInfo.el.style.backgroundColor = '#19CD0D';
+        }
+        const elemento= document.querySelector(".contenedor-reservar");
+        const elemento1= document.querySelector(".triangulo");
+                if(elemento != null){
+                    elemento.remove();
+                    elemento1.remove();
+                }
+        
+        
+      },
+
+      
+     
+
+
+      eventClick:function(calEvent,jsEvent,view){
+        //Elimina el evento luego de que ya esta creado y ademas hay que eliminar del arreglo tambien la fecha borrada.
+        
+        var fecha = new Date(calEvent.event.start);
+        let color= calEvent.event.backgroundColor;
+
+        const fechaFinal = ""+fecha.getFullYear()+"-"+(fecha.getMonth()+1)+"-"+fecha.getDate()+" "+fecha.getHours()+":00:00";
+ 
+        const fechaFinal2 = ""+fecha.getFullYear()+"-"+(fecha.getMonth()+1)+"-"+fecha.getDate()+" "+(fecha.getHours()+1)+":00:00";
+ 
+        //alert(fechaFinal);
+        const fechaE=fechaFinal+"/"+fechaFinal2; 
+        if(pagina=="perfilProfesor"){
+            let pos = arreglo.indexOf(fechaE);
+            
+            if(pos!= -1){
+                arreglo.splice(pos,1);
+                longitud=arreglo.length;
+                cont1--;
+            }
+            calEvent.event.remove(); 
         }
 
       //cuando sea para el estudiante hay que eliminar lo del evento donde se agregan las fechas y hay que ponerle
