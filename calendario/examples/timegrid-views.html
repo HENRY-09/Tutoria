@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8' />
+<link href='../packages/core/main.css' rel='stylesheet' />
+<link href='../packages/daygrid/main.css' rel='stylesheet' />
+<link href='../packages/timegrid/main.css' rel='stylesheet' />
+<link href='../packages/list/main.css' rel='stylesheet' />
+<script src='../packages/core/main.js'></script>
+<script src='../packages/interaction/main.js'></script>
+<script src='../packages/daygrid/main.js'></script>
+<script src='../packages/timegrid/main.js'></script>
+<script src='../packages/list/main.js'></script>
+
+
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+
+
+
+
+
+<script>
+
+  document.addEventListener('DOMContentLoaded', function() {
+    
+    var calendarEl = document.getElementById('calendar');
+
+    
+    /*var hola = new Date();
+
+    var fecha = ""+hola.getFullYear()+"-"+hola.getMonth()+"-"+(hola.getDate()+1)+"";
+
+    alert(fecha);*/
+
+      let hoy = new Date();
+      let DIA_EN_MILISEGUNDOS = 24 * 60 * 60 * 1000;
+      let manana = new Date(hoy.getTime() + DIA_EN_MILISEGUNDOS);
+
+    
+    
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+
+      plugins: [ 'dayGrid', 'timeGrid', 'list', 'interaction' ],
+      
+
+      
+      //fecha = calendar.getDate();
+
+      //defaultDate: ''+calendar.getDate().getYear()+'-'+calendar.getDate().getMonth()+'-'+calendar.getDate().getDay()+'',
+      defaultDate: manana,
+      defaultView: 'timeGridWeek',
+     
+
+      header: {
+        left: 'prev,next',
+        center: 'title',
+        
+      },
+
+      eventLimit:true,
+      
+
+      selectOverlap:false,
+
+      views: {
+
+        timeGrid: {
+          
+          //minTime: "5:00:00",
+          //maxTime: "23:00:00"
+
+          columnHeaderFormat:  { year: 'numeric',month:'2-digit', day:'2-digit',weekday: 'long', },
+
+          titleFormat: { year: 'numeric', month: 'long', day: 'numeric' } ,
+
+          slotLabelFormat: {
+                          hour: 'numeric',
+                          minute: '2-digit',
+                          omitZeroMinute: false,
+                          meridiem: 'short'
+                        }
+        
+         }
+    
+    },
+      
+      selectable: true,
+
+      eventConstraint:{
+            startTime: '2021-01-01T10:00:00',
+            endTime: '2021-12-05T22:00:00'
+},
+
+
+      
+     select: function(arg) {
+      
+
+      var fecha3 = new Date(manana.getTime()-(24 * 60 * 60 * 1000));
+
+      
+  
+      
+      //var fechaHoy = new Date(2017, 0, 1, 1, 15);
+
+
+      var diferencia = 24-fecha3.getHours();
+
+
+      var auxiliar = new Date(fecha3.getFullYear(),fecha3.getMonth(),fecha3.getDate(),fecha3.getHours()+diferencia,0,0);
+
+      var final = new Date(arg.start.getFullYear(),arg.start.getMonth(),arg.start.getDate(),arg.start.getHours()+1,0,0);
+
+      
+      
+     //alert(auxiliar);
+     
+
+      if(Date.parse(auxiliar)<=Date.parse(arg.start)){
+
+
+        
+          calendar.addEvent({
+          
+          
+          start: arg.start,
+          end: final,
+         
+          
+          overlap: false,
+          color: '#19CD0D',
+          allDay: false
+          
+          
+          },
+          
+       
+          )
+
+
+          var fecha = new Date(arg.start);
+
+         
+
+       fechaFinal = ""+fecha.getFullYear()+"-"+(fecha.getMonth()+1)+"-"+fecha.getDate()+" "+fecha.getHours()+":00:00";
+
+       fechaFinal2 = ""+fecha.getFullYear()+"-"+(fecha.getMonth()+1)+"-"+fecha.getDate()+" "+(fecha.getHours()+1)+":00:00";
+
+       //alert(fechaFinal);
+
+       alert("Se selecciono un hora"); 
+       //aqui se agregara cada fecha al arreglo y cuando se presione un boton continuar es que se mandara al servidor.
+        /* $.ajax({
+                        
+          
+                        type: 'GET',
+                        url: "Backend.php",
+                        data: {
+                            
+                            "fecha":fechaFinal,
+                            "fecha2":fechaFinal2
+                            
+                            
+                            
+                        }, 
+                        success: function(data) {
+                               
+                        
+                                
+
+                              
+                       }
+                
+                }); */
+                
+
+        
+        }
+        
+        //calendar.unselect()
+          }, //Finalizar condicional
+      
+          
+  
+          
+
+  aspectRatio: 1.35,
+      
+      dateClick:function(info){
+
+        //alert('Clicked '+info.dateStr);
+
+        
+        
+        
+      
+        
+      },
+
+      eventMouseEnter:function(mouseEnterInfo) { 
+
+        //mouseEnterInfo.el.style.backgroundColor = '#299AD1';
+
+        
+
+      },
+
+     
+
+
+     
+
+      eventMouseLeave:function(mouseLeaveInfo) { 
+
+        //mouseLeaveInfo.el.style.backgroundColor = '#19CD0D';
+
+      },
+
+      
+     
+
+
+      eventClick:function(calEvent,jsEvent,view){
+        //Elimina el evento luego de que ya esta creado y ademas hay que eliminar del arreglo tambien la fecha borrada.
+      calEvent.event.remove();
+
+      
+
+      },
+
+
+  
+     
+      
+
+      /*eventDurationEditable:false,
+
+      eventStartEditable:false,*/
+      
+      
+      events: "Backend2.php"
+      //cuando sea para el estudiante hay que eliminar lo del evento donde se agregan las fechas y hay que ponerle
+      //para que le salga el reservar tutoria y ademas hay que cambiarle el color de esa fecha en la base de datos
+      //para que salga en rojo y no nadie mas pueda seleccionarla. eso se puede validar por el color si el color esta en 
+      //verde entonces que le salga el mensaje para que reserve y si esta en rojo pues que no le salga...
+      
+      
+
+       // can click day/week names to navigate views
+      
+       
+     
+      
+    });
+
+
+
+    
+
+    var dia = calendar.getDate();
+
+
+    //calendar.setOption('defaultDate','2021-5-15');
+    calendar.setOption('firstDay',dia.getDay());
+
+    calendar.setOption('locale','es');
+
+    calendar.render();
+  });
+
+</script>
+
+
+
+
+
+<style>
+
+  #calendar {
+    max-width: 790px;
+    margin: 40px auto;
+    padding: 0;
+    font-family: Arial, Helvetica, Verdana, Trebuchet, Tahoma, Futura;
+    font-size: 15px;
+  }
+
+</style>
+</head>
+<body>
+
+
+
+
+  <div id='calendar'></div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+
+</body>
+</html>

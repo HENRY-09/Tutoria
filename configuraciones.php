@@ -54,6 +54,9 @@
                 $_SESSION["apellido"]=$apellido;
                 $sql= $conn->prepare("UPDATE tutorias SET idTutor=$cedulaN WHERE idTutor=$cedulaV");
                 $sql->execute();
+
+                $sql= $conn->prepare("UPDATE fecha SET idTutor=$cedulaN WHERE idTutor=$cedulaV");
+                $sql->execute();
             }
         }
         else if($_POST["tipo1"]=="Pedir-contrasena"){
@@ -91,6 +94,37 @@
                 $sql= $conn->prepare("UPDATE profesores SET pasword='$pass' WHERE cedula=$cedula");
                 $sql->execute();
             }
+        }
+        else if($_POST["tipo1"]=="Actualizar-horario"){
+            $cedula=$_SESSION["cedula"];
+            if(isset($_POST["inicioE"])){
+                $inicio = json_decode($_POST['inicioE']);
+                $fin= json_decode($_POST['finE']);
+                $a=0;
+                while ($a < count($inicio)) {
+                    $fechaI=$inicio[$a];
+                    $fechaF=$fin[$a];
+                    $sql = $conn->prepare("DELETE FROM fecha WHERE idTutor=$cedula && start='$fechaI' && end='$fechaF'");
+                    $sql->execute();
+                    $a++;
+                    //eliminar de tutorias donde idTutor star coincidan
+                    $sql = $conn->prepare("DELETE FROM tutorias WHERE idTutor=$cedula && star='$fechaI'");
+                    $sql->execute();
+                }
+            }
+            if(isset($_POST["inicio"])){
+                $inicio = json_decode($_POST['inicio']);
+                $fin= json_decode($_POST['fin']);
+                $a=0;
+                while ($a < count($inicio)) {
+                    $fechaI=$inicio[$a];
+                    $fechaF=$fin[$a];
+                    $sql = $conn->prepare("INSERT INTO fecha(idTutor,start,end,color) VALUE ($cedula,'$fechaI','$fechaF','#19CD0D')");
+                    $sql->execute();
+                    $a++;
+                }
+            }
+            
         }
 ?>
 

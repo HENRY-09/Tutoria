@@ -80,6 +80,17 @@
         else{
             echo json_encode("EL PROFESOR $nombre $apellido NO SE PUDO REGISTRAR");
             }*/
+
+            $inicio = json_decode($_POST['inicio']);
+            $fin= json_decode($_POST['fin']);
+            $a=0;
+            while ($a < count($inicio)) {
+                $fechaI=$inicio[$a];
+                $fechaF=$fin[$a];
+                $sql = $con->prepare("INSERT INTO fecha(idTutor,start,end,color) VALUE ($cedula,'$fechaI','$fechaF','#19CD0D')");
+                $sql->execute();
+                $a++;
+            }
            
         }
 

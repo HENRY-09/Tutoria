@@ -1,5 +1,9 @@
 let pagina= location.pathname.split("/");
 pagina=pagina[pagina.length-1];
+let arreglo=[];
+let arregloE=[];
+let cont1=0;
+let contE=0;
 if(pagina=="perfilProfesor" || pagina=="perfilEstudiante" ){
 const Data= new FormData();
 const foto= document.getElementById("foto");
@@ -232,8 +236,13 @@ if(pagina=="perfilEstudiante"){
 
                             contenedorHorario.classList.add("contenedor-materias");
                             titulo.textContent="Escoger Fecha";
+                            titulo.classList.add("calendario-h1")
                             parrafo.textContent="Recuerda que la fecha ingresada sera la fecha a la que debe de asistir a la tutoria.";
-                            form.classList.add("fecha");
+                            
+
+                            const calendario= document.createElement("div");
+                            calendario.setAttribute("id","calendar");
+                            /*form.classList.add("fecha");
                             form.setAttribute("id","form");
                             form.setAttribute("method","POST");
                             
@@ -244,44 +253,400 @@ if(pagina=="perfilEstudiante"){
                             button.textContent="Reservar Tutoria";
                             
                             form.append(input);
-                            form.append(button);
+                            form.append(button);*/
+
                             contenedorHorario.append(titulo);
                             contenedorHorario.append(parrafo);
-                            contenedorHorario.append(form);
+
+                            contenedorHorario.append(calendario);
+                            //contenedorHorario.append(form);
                             contenido.append(contenedorHorario);
                             
-                            const Datos= new FormData();
-                            Datos.append("tipo","reservarTutoria");
-                            form.addEventListener("submit",(e)=>{
-                                e.preventDefault();
-                                Datos.append("cedulaP",cedulaprofesor);
-                                let fecha= document.getElementById("fecha").value;
-                                fecha= fecha.split("T");
-                                const horario=`${fecha[0]} ${fecha[1]}`;
-                                Datos.append("fecha",horario);
+
+
+
+                            
+//////////////////////////////////////////////////////////////////////
+
+
+
+    
+    var calendarEl = document.getElementById('calendar');
+
+    
+    /*var hola = new Date();
+
+    var fecha = ""+hola.getFullYear()+"-"+hola.getMonth()+"-"+(hola.getDate()+1)+"";
+
+    alert(fecha);*/
+
+      let hoy = new Date();
+      let DIA_EN_MILISEGUNDOS = 24 * 60 * 60 * 1000;
+      let manana = new Date(hoy.getTime() + DIA_EN_MILISEGUNDOS);
+
+    
+    
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+
+      plugins: [ 'dayGrid', 'timeGrid', 'list', 'interaction' ],
+      
+
+      
+      //fecha = calendar.getDate();
+
+      //defaultDate: ''+calendar.getDate().getYear()+'-'+calendar.getDate().getMonth()+'-'+calendar.getDate().getDay()+'',
+      defaultDate: manana,
+      defaultView: 'timeGridWeek',
+     
+
+      header: {
+        left: 'prev,next',
+        center: 'title',
+        
+      },
+
+      eventLimit:true,
+      
+
+      selectOverlap:false,
+
+      views: {
+
+        timeGrid: {
+          
+          //minTime: "5:00:00",
+          //maxTime: "23:00:00"
+
+          columnHeaderFormat:  { year: 'numeric',month:'2-digit', day:'2-digit',weekday: 'long', },
+
+          titleFormat: { year: 'numeric', month: 'long', day: 'numeric' } ,
+
+          slotLabelFormat: {
+                          hour: 'numeric',
+                          minute: '2-digit',
+                          omitZeroMinute: false,
+                          meridiem: 'short'
+                        }
+        
+         }
+    
+    },
+      
+      selectable: true,
+
+      eventConstraint:{
+            startTime: '2021-01-01T10:00:00',
+            endTime: '2021-12-05T22:00:00'
+},
+
+
+      
+     select: function(arg) {
+      
+
+      var fecha3 = new Date(manana.getTime()-(24 * 60 * 60 * 1000));
+
+      
+  
+      
+      //var fechaHoy = new Date(2017, 0, 1, 1, 15);
+
+
+      var diferencia = 24-fecha3.getHours();
+
+
+      var auxiliar = new Date(fecha3.getFullYear(),fecha3.getMonth(),fecha3.getDate(),fecha3.getHours()+diferencia,0,0);
+
+      var final = new Date(arg.start.getFullYear(),arg.start.getMonth(),arg.start.getDate(),arg.start.getHours()+1,0,0);
+
+      
+      
+     //alert(auxiliar);
+     
+
+      if(Date.parse(auxiliar)<=Date.parse(arg.start)  && pagina=="perfilProfesor"){
+
+
+        
+          calendar.addEvent({
+          
+          
+          start: arg.start,
+          end: final,
+         
+          
+          overlap: false,
+          color: '#19CD0D',
+          allDay: false
+          
+          
+          },
+          
+       
+          )
+
+
+          var fecha = new Date(arg.start);
+
+         
+
+       fechaFinal = ""+fecha.getFullYear()+"-"+(fecha.getMonth()+1)+"-"+fecha.getDate()+" "+fecha.getHours()+":00:00";
+
+       fechaFinal2 = ""+fecha.getFullYear()+"-"+(fecha.getMonth()+1)+"-"+fecha.getDate()+" "+(fecha.getHours()+1)+":00:00";
+
+       //alert(fechaFinal);
+
+       arreglo[cont1]=fechaFinal+"/"+fechaFinal2;
+       cont1++;
+       longitud= cont1;
+       //aqui se agregara cada fecha al arreglo y cuando se presione un boton continuar es que se mandara al servidor.
+        /* $.ajax({
+                        
+          
+                        type: 'GET',
+                        url: "Backend.php",
+                        data: {
+                            
+                            "fecha":fechaFinal,
+                            "fecha2":fechaFinal2
+                            
+                            
+                            
+                        }, 
+                        success: function(data) {
+                               
+                        
                                 
-                                fetch("tutor",{
-                                    method:"POST",
-                                    body: Datos
-                                })
-                                .then(res=>res.json())
-                                .then(res =>{
 
-                                    //if(res==null) alert("Error en la base de datos");
+                              
+                       }
+                
+                }); */
+                
 
-                                    if(res=="RESERVADA"){
-                                        form.setAttribute("action","perfilEstudiante"); 
-                                        alert(`LA TUTORIA FUE: ${res}.`);
-                                        form.submit();
-                                         
-                                    }
-                                    else if(res=="NO RESERVADA"){
-                                        alert(`LA TUTORIA FUE: ${res}.SELECCIONE OTRA FECHA.`);
-                                        form.submit();
-                                         
-                                    }
-                                })
-                            })
+        
+        }
+        
+        //calendar.unselect()
+          }, //Finalizar condicional
+      
+          
+  
+          
+
+  aspectRatio: 1.35,
+      
+      dateClick:function(info){
+
+        //alert('Clicked '+info.dateStr);
+
+        
+        
+        
+      
+        
+      },
+
+      eventMouseEnter:function(mouseEnterInfo) { 
+
+        //mouseEnterInfo.el.style.backgroundColor = '#299AD1';
+
+        
+
+      },
+
+     
+
+
+     
+
+      eventMouseLeave:function(mouseLeaveInfo) { 
+
+        //mouseLeaveInfo.el.style.backgroundColor = '#19CD0D';
+
+      },
+
+      
+     
+
+
+      eventClick:function(calEvent,jsEvent,view){
+        //Elimina el evento luego de que ya esta creado y ademas hay que eliminar del arreglo tambien la fecha borrada.
+        
+        var fecha = new Date(calEvent.event.start);
+        let color= calEvent.event.backgroundColor;
+
+        const fechaFinal = ""+fecha.getFullYear()+"-"+(fecha.getMonth()+1)+"-"+fecha.getDate()+" "+fecha.getHours()+":00:00";
+ 
+        const fechaFinal2 = ""+fecha.getFullYear()+"-"+(fecha.getMonth()+1)+"-"+fecha.getDate()+" "+(fecha.getHours()+1)+":00:00";
+ 
+        //alert(fechaFinal);
+        const fechaE=fechaFinal+"/"+fechaFinal2; 
+        if(pagina=="perfilProfesor"){
+            let pos = arreglo.indexOf(fechaE);
+            
+            if(pos!= -1){
+                arreglo.splice(pos,1);
+                longitud=arreglo.length;
+                cont1--;
+            }
+            calEvent.event.remove(); 
+        }
+        else if(pagina=="perfilEstudiante"){
+            calendarEl.addEventListener("click",(e)=>{
+                const elemento= document.querySelector(".contenedor-reservar");
+                const elemento1= document.querySelector(".triangulo");
+                if(elemento != null){
+                    elemento.remove();
+                    elemento1.remove();
+                }
+                 const div= document.createElement("div");
+                 div.classList.add("contenedor-reservar");
+                 const div1= document.createElement("div");
+                 div1.classList.add("triangulo");
+                 let arr= fechaFinal.split(" ");
+                 let arr1= fechaFinal2.split(" ");
+ 
+                const div2= document.createElement("div");
+                const span1= document.createElement("span");
+                const p1= document.createElement("p");
+                span1.textContent="Fecha: ";
+                
+                p1.textContent=`${arr[0]}`;
+ 
+ 
+                const div3= document.createElement("div");
+                const span2= document.createElement("span");
+                const p2= document.createElement("p");
+                span2.textContent="Hora: ";
+                
+                let horaI= arr[1].split(":");
+                horaI=""+horaI[0]+":"+horaI[1];
+                let horaF= arr1[1].split(":");
+                horaF=""+horaF[0]+":"+horaF[1];
+                p2.textContent=`${horaI} - ${horaF}`;
+                const button= document.createElement("button");
+                button.textContent="Reservar tutoria";
+ 
+                div2.append(span1);
+                div3.append(span2);
+                div2.append(p1);
+                div3.append(p2);
+                div.append(div2);
+                div.append(div3);
+                div.append(button);
+                 e.target.append(div1);
+                 e.target.append(div);
+                 
+ 
+                 const Datos= new FormData();
+                             Datos.append("tipo","reservarTutoria");
+                             button.addEventListener("click",()=>{
+                                 Datos.append("cedulaP",cedulaprofesor);
+                                 const horario=`${fechaFinal}`;
+                                 const horario2=`${fechaFinal2}`;
+                                 Datos.append("fecha",horario);
+                                 Datos.append("fecha2",horario2);
+                                 fetch("tutor",{
+                                     method:"POST",
+                                     body: Datos
+                                 })
+                                 .then(res=>res.json())
+                                 .then(res =>{
+ 
+                                     //if(res==null) alert("Error en la base de datos");
+ 
+                                     if(res=="RESERVADA"){
+                                         alert(`LA TUTORIA FUE: ${res}.`);
+                                          window.location.href="perfilEstudiante";
+                                     }
+                                     else if(res=="NO RESERVADA"){
+                                         alert(`LA TUTORIA FUE: ${res}.SELECCIONE OTRA FECHA.`);
+                                     }
+                                 })
+                             })
+                 ///////////////
+                 if(calEvent.event.backgroundColor=="red"){
+                    
+                    button.remove();
+                    const button2= document.createElement("button");
+                    button2.textContent="No disponible";
+                    button2.style.backgroundColor = 'red';
+                    div.append(button2);
+                }
+                if(calEvent.event.backgroundColor!="#19CD0D" && calEvent.event.backgroundColor!="red"){
+                    div.remove();
+                    div1.remove(); 
+                }
+                if(e.target.classList.contains("fc-button") ||e.target.classList.contains("fc-icon") ){
+                    div.remove();
+                    div1.remove(); 
+                }
+
+                ////////
+                var fecha3 = new Date(manana.getTime()-(24 * 60 * 60 * 1000));
+                var diferencia = 24-fecha3.getHours();
+                var auxiliar = new Date(fecha3.getFullYear(),fecha3.getMonth(),fecha3.getDate(),fecha3.getHours()+diferencia,0,0);
+
+                if(Date.parse(auxiliar)>=Date.parse(calEvent.event.start)){
+                    div.remove();
+                    div1.remove(); 
+                }
+                ////////
+             })
+            
+        }
+
+      //cuando sea para el estudiante hay que eliminar lo del evento donde se agregan las fechas y hay que ponerle
+      //para que le salga el reservar tutoria y ademas hay que cambiarle el color de esa fecha en la base de datos
+      //para que salga en rojo y no nadie mas pueda seleccionarla. eso se puede validar por el color si el color esta en 
+      //verde entonces que le salga el mensaje para que reserve y si esta en rojo pues que no le salga...
+      //En PERFIL .JS AQUI VA UN CONDICIONAL DE CUANDO ES ESTUDIANTE
+
+      },
+
+
+  
+     
+      
+
+      /*eventDurationEditable:false,
+
+      eventStartEditable:false,*/
+      
+      
+      events: `calendario/examples/Backend2?cedula=${cedulaprofesor}`
+      
+      
+      
+
+       // can click day/week names to navigate views
+      
+       
+     
+      
+    });
+
+
+
+    
+
+    var dia = calendar.getDate();
+
+
+    //calendar.setOption('defaultDate','2021-5-15');
+    calendar.setOption('firstDay',dia.getDay());
+
+    calendar.setOption('locale','es');
+
+    calendar.render();
+
+/////////////////////////////////////////////////////////////////////
+
+
+
+
+                            
 
                         })
                     }
@@ -669,6 +1034,354 @@ const Configuraciones= (user)=>{
     contenedor_opciones.append(div2);
     contenedor_opciones.append(div3);
     contenedor_opciones.append(div4);
+    const div5= document.createElement("div");
+    if(user=="Profesor"){
+       
+        div5.classList.add("opciones2");
+        const span4= document.createElement("span");
+        span4.classList.add("icon-calendar");
+        div5.textContent="Actualizar horario";
+        div5.append(span4);
+        contenedor_opciones.append(div5);
+        div5.addEventListener("click",()=>{
+            let conten= document.getElementById("contenido");
+            const contenedor_dinamico= document.getElementById("contenedor-dinamico");
+            conten.remove();
+            conten= document.createElement("div");
+            conten.setAttribute("id","contenido");
+            conten.classList.add("contenido");
+            conten.classList.add("white");
+            contenedor_dinamico.append(conten);
+    
+            div5.classList.add("inactivo");
+            div2.classList.remove("inactivo");
+            div3.classList.remove("inactivo");
+            div4.classList.remove("inactivo");
+    
+            const contenedor=document.createElement("div");
+            contenedor.classList.add("contenedor-calendario");
+            const h1=document.createElement("h1");
+            h1.textContent="Horario de disponibilidad";
+            const p=document.createElement("p");
+            p.textContent="Ver y editar tu horario de disponibilidad para las tutorias.";
+            const calendario= document.createElement("div");
+            calendario.setAttribute("id","calendar");
+            const button3=document.createElement("button");
+            button3.setAttribute("id","calendario-aceptar");
+            button3.setAttribute("class","calendario-aceptar");
+            button3.textContent="Actualizar";
+
+            contenedor.append(h1);
+            contenedor.append(p);
+            calendario.append(button3);
+            contenedor.append(calendario);
+            conten.append(contenedor);
+
+
+            //////////////////////////////////////////////////////////////////////
+
+
+
+    
+    var calendarEl = document.getElementById('calendar');
+
+    
+    /*var hola = new Date();
+
+    var fecha = ""+hola.getFullYear()+"-"+hola.getMonth()+"-"+(hola.getDate()+1)+"";
+
+    alert(fecha);*/
+
+      let hoy = new Date();
+      let DIA_EN_MILISEGUNDOS = 24 * 60 * 60 * 1000;
+      let manana = new Date(hoy.getTime() + DIA_EN_MILISEGUNDOS);
+
+    
+    
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+
+      plugins: [ 'dayGrid', 'timeGrid', 'list', 'interaction' ],
+      
+
+      
+      //fecha = calendar.getDate();
+
+      //defaultDate: ''+calendar.getDate().getYear()+'-'+calendar.getDate().getMonth()+'-'+calendar.getDate().getDay()+'',
+      defaultDate: manana,
+      defaultView: 'timeGridWeek',
+     
+
+      header: {
+        left: 'prev,next',
+        center: 'title',
+        
+      },
+
+      eventLimit:true,
+      
+
+      selectOverlap:false,
+
+      views: {
+
+        timeGrid: {
+          
+          //minTime: "5:00:00",
+          //maxTime: "23:00:00"
+
+          columnHeaderFormat:  { year: 'numeric',month:'2-digit', day:'2-digit',weekday: 'long', },
+
+          titleFormat: { year: 'numeric', month: 'long', day: 'numeric' } ,
+
+          slotLabelFormat: {
+                          hour: 'numeric',
+                          minute: '2-digit',
+                          omitZeroMinute: false,
+                          meridiem: 'short'
+                        }
+        
+         }
+    
+    },
+      
+      selectable: true,
+
+      eventConstraint:{
+            startTime: '2021-01-01T10:00:00',
+            endTime: '2021-12-05T22:00:00'
+},
+
+
+      
+     select: function(arg) {
+      
+
+      var fecha3 = new Date(manana.getTime()-(24 * 60 * 60 * 1000));
+
+      
+  
+      
+      //var fechaHoy = new Date(2017, 0, 1, 1, 15);
+
+
+      var diferencia = 24-fecha3.getHours();
+
+
+      var auxiliar = new Date(fecha3.getFullYear(),fecha3.getMonth(),fecha3.getDate(),fecha3.getHours()+diferencia,0,0);
+
+      var final = new Date(arg.start.getFullYear(),arg.start.getMonth(),arg.start.getDate(),arg.start.getHours()+1,0,0);
+
+      
+      
+     //alert(auxiliar);
+     
+
+      if(Date.parse(auxiliar)<=Date.parse(arg.start)  && pagina=="perfilProfesor"){
+
+
+        
+          calendar.addEvent({
+          
+          
+          start: arg.start,
+          end: final,
+         
+          
+          overlap: false,
+          color: '#19CD0D',
+          allDay: false
+          
+          
+          },
+          
+       
+          )
+
+
+          var fecha = new Date(arg.start);
+
+         
+
+       fechaFinal = ""+fecha.getFullYear()+"-"+(fecha.getMonth()+1)+"-"+fecha.getDate()+" "+fecha.getHours()+":00:00";
+
+       fechaFinal2 = ""+fecha.getFullYear()+"-"+(fecha.getMonth()+1)+"-"+fecha.getDate()+" "+(fecha.getHours()+1)+":00:00";
+
+       //alert(fechaFinal);
+
+       arreglo[cont1]=fechaFinal+"/"+fechaFinal2;
+       cont1++;
+       longitud= cont1;
+      
+                
+
+        
+        }
+        
+        //calendar.unselect()
+          }, //Finalizar condicional
+      
+          
+  
+          
+
+  aspectRatio: 1.35,
+      
+      dateClick:function(info){
+
+        //alert('Clicked '+info.dateStr);
+
+        
+        
+        
+      
+        
+      },
+
+      eventMouseEnter:function(mouseEnterInfo) { 
+
+        //mouseEnterInfo.el.style.backgroundColor = '#299AD1';
+
+        
+
+      },
+
+     
+
+
+     
+
+      eventMouseLeave:function(mouseLeaveInfo) { 
+
+        //mouseLeaveInfo.el.style.backgroundColor = '#19CD0D';
+
+      },
+
+      
+     
+
+
+      eventClick:function(calEvent,jsEvent,view){
+        //Elimina el evento luego de que ya esta creado y ademas hay que eliminar del arreglo tambien la fecha borrada.
+        
+        var fecha = new Date(calEvent.event.start);
+        let color= calEvent.event.backgroundColor;
+
+        const fechaFinal = ""+fecha.getFullYear()+"-"+(fecha.getMonth()+1)+"-"+fecha.getDate()+" "+fecha.getHours()+":00:00";
+ 
+        const fechaFinal2 = ""+fecha.getFullYear()+"-"+(fecha.getMonth()+1)+"-"+fecha.getDate()+" "+(fecha.getHours()+1)+":00:00";
+ 
+        //alert(fechaFinal);
+        const fechaE=fechaFinal+"/"+fechaFinal2; 
+        if(pagina=="perfilProfesor"){
+            let pos = arreglo.indexOf(fechaE);
+            
+            if(pos!= -1){
+                arreglo.splice(pos,1);
+                longitud=arreglo.length;
+                cont1--;
+            }
+            else if(pos== -1){
+                //Agregar la fehca a un arreglo eliminar[] para eliminar esa fecha que ya estaba
+                arregloE[contE]=fechaFinal+"/"+fechaFinal2;
+                contE++;
+            }
+            calEvent.event.remove(); 
+        }
+
+      //cuando sea para el estudiante hay que eliminar lo del evento donde se agregan las fechas y hay que ponerle
+      //para que le salga el reservar tutoria y ademas hay que cambiarle el color de esa fecha en la base de datos
+      //para que salga en rojo y no nadie mas pueda seleccionarla. eso se puede validar por el color si el color esta en 
+      //verde entonces que le salga el mensaje para que reserve y si esta en rojo pues que no le salga...
+      //En PERFIL .JS AQUI VA UN CONDICIONAL DE CUANDO ES ESTUDIANTE
+
+      },
+
+
+  
+     
+      
+
+      /*eventDurationEditable:false,
+
+      eventStartEditable:false,*/
+      
+      
+      events: `calendario/examples/Backend`
+      
+      
+      
+
+       // can click day/week names to navigate views
+      
+       
+     
+      
+    });
+
+
+
+    
+
+    var dia = calendar.getDate();
+
+
+    //calendar.setOption('defaultDate','2021-5-15');
+    calendar.setOption('firstDay',dia.getDay());
+
+    calendar.setOption('locale','es');
+
+    calendar.render();
+
+/////////////////////////////////////////////////////////////////////
+button3.addEventListener("click",()=>{
+    //recordar en el php primero se borran las fechas de arregloE y luego se agregan las del arreglo
+            let arreglo1=[];
+            let arreglo2=[];
+            let arreglo3=[];
+            let arreglo4=[];
+            let cont2=0;
+            for (let valor of arreglo) {
+                valor= valor.split("/");
+                arreglo1[cont2]=valor[0];
+                arreglo2[cont2]=valor[1];
+                cont2++;
+            }
+            cont2=0;
+            for (let valor of arregloE) {
+                valor= valor.split("/");
+                arreglo3[cont2]=valor[0];
+                arreglo4[cont2]=valor[1];
+                cont2++;
+            }
+            const Data= new FormData();
+            
+           
+            if(arreglo.length>0){
+                Data.append("inicio",JSON.stringify(arreglo1));
+                Data.append("fin",JSON.stringify(arreglo2));
+            }
+            if(arregloE.length>0){
+                Data.append("inicioE",JSON.stringify(arreglo3));
+                Data.append("finE",JSON.stringify(arreglo4));
+            }
+            if(arregloE.length>0 ||arreglo.length>0){
+                Data.append("tipo1","Actualizar-horario");
+                fetch("configuraciones",{
+                    method: "POST",
+                    body: Data
+                })
+                .then(res=>{
+                    alert("Su horario fue actualizado.");
+                    window.location.href="perfilProfesor";
+                })
+            }
+})
+
+
+        })
+    }
+    
+    
     //ACTUALIZAR INFORMACION PERSONAL
     div2.addEventListener("click",()=>{
         let conten= document.getElementById("contenido");
@@ -683,6 +1396,7 @@ const Configuraciones= (user)=>{
         div2.classList.add("inactivo");
         div3.classList.remove("inactivo");
         div4.classList.remove("inactivo");
+        div5.classList.remove("inactivo");
 
         const contenedor=document.createElement("div");
         contenedor.classList.add("contenedor-informacion");
@@ -804,6 +1518,7 @@ const Configuraciones= (user)=>{
         div3.classList.add("inactivo");
         div2.classList.remove("inactivo");
         div4.classList.remove("inactivo");
+        div5.classList.remove("inactivo");
         const contenedor=document.createElement("div");
         const h1=document.createElement("h1");
         h1.textContent="Actualizar foto de perfil";
@@ -865,6 +1580,7 @@ const Configuraciones= (user)=>{
         div4.classList.add("inactivo");
         div3.classList.remove("inactivo");
         div2.classList.remove("inactivo");
+        div5.classList.remove("inactivo");
 
         const contenedor=document.createElement("div");
         contenedor.classList.add("contenedor-contraseña");

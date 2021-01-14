@@ -26,7 +26,14 @@ session_start();
             $cedulaP=$_POST["cedulaP"];
             $cedula=$_SESSION['cedula'];
             $fecha=$_POST['fecha'];
+            $fecha2=$_POST['fecha2'];
+
+            
+
             $sql = $conn->prepare("INSERT INTO tutorias(activo,idTutoria,idTutor,idEstudiante,title,descripcion,color,textColor,star,link) VALUES ( 1,$idT,$cedulaP,$cedula,'TUTORIA','NOMBRE DEL TUTOR....' ,'#1FE9E9','#FFFFFF', '$fecha','$enlace')");
+            $sql->execute();
+
+            $sql = $conn->prepare("UPDATE fecha SET color='red' WHERE idTutor= $cedulaP && start='$fecha' && end='$fecha2'");
             $sql->execute();
     
             $sql= $conn->prepare("SELECT  COUNT(*) FROM tutorias");
@@ -53,26 +60,31 @@ session_start();
                 $to = $correo1.",".$correo2;
                 $subject = "TUTORIA RESERVADA";
                 $headers = 'From:soporte@tutorias-academicas.com'."\r\n" ;
+                $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
                 
                 
                 
-                $message = '
+                $message = ' 
                     
+                    <HTML>
+                    
+                       <BODY style="text-align: center; background-color: rgb(224,237,243); width: 80%; height:100%; margin-left:10%; border-radius: 10px;font-size: 15px;">
+                    
+                    <p style="margin-top: 5%;margin-left: 5%;margin-right: 5%;">El Estudiante <span style="font-weight: bold;">'.$nombreE.'</span> reservo una tutoria para la fecha <span style="font-weight: bold;">'.$fecha.'</span> con el tutor <span style="font-weight: bold;">'.$nombreP.'</span>.</p>
+                    
+                    <p style="margin-left: 5%;margin-right: 5%;">La reunion se realizara via Zoom y el enlace de la reunion es:</p>
                 
-                    El Estudiante '.$nombreE.' reservo una tutoria para la fecha '.$fecha.' con el tutor '.$nombreP.'.
-                    
-                    La reunion se realizara via Zoom y el enlace de la reunion es:
-                
-                    '.$enlace.'
+                    <a href="'.$enlace.'" style="text-align: center;margin-left: 5%;margin-right: 5%; display:block;">'.$enlace.'</a>
                     
                     
                     
-                    !Gracias!
+                    <p style="margin-left: 5%;margin-right: 5%;">!Gracias!</p>
                     -------------------------
                 
                     
                 
-                
+                        </BODY>
+                        </HTML>
                 
                             ';
                 

@@ -58,6 +58,18 @@ try{
             }
             
         }
+
+        $sql2=$con->prepare("SELECT idTutor,star FROM tutorias WHERE idTutoria=$idTutoria");
+        $sql2->execute();
+        $resultado2= $sql2->fetchAll(PDO::FETCH_ASSOC);
+            foreach($resultado2 as $row2){
+                $idTutor=$row2["idTutor"];
+                $star=$row2["star"];
+            }
+
+        $sql = $con->prepare("UPDATE fecha SET color='#19CD0D' WHERE idTutor= $idTutor && start='$star'");
+        $sql->execute();
+
         $sql= $con->prepare("DELETE FROM tutorias WHERE idTutoria=$idTutoria");
         $sql->execute();
     }
